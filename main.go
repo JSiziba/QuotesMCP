@@ -108,20 +108,18 @@ func mustEnv(key string) string {
 func main() {
 	_ = godotenv.Load()
 
-	apiKey := mustEnv("API_NINJAS_KEY")
-
-	mcpServer := buildMCPServer(apiKey)
-
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
+	apiKey := mustEnv("API_NINJAS_KEY")
+	baseURL := mustEnv("BASE_URL")
+
+	mcpServer := buildMCPServer(apiKey)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-
-	baseURL := mustEnv("BASE_URL")
 
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "ok")
